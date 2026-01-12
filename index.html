@@ -1,472 +1,428 @@
 <!DOCTYPE html>
-<html lang="km">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Reaksa Ads - Fully Responsive</title>
+    <title>Reaksa Ads - V46 Khmer & Logo</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@300;400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        /* CSS Variables */
         :root {
-            --sidebar-bg: #111827;
-            --primary: #2563eb;
-            --bg-body: #f3f4f6;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --border: #e5e7eb;
+            --bg-body: #f1f5f9; --sidebar-bg: #0f172a; --card-bg: #ffffff;
+            --text-main: #1e293b; --text-sub: #64748b; --border: #e2e8f0;
+            --primary: #2563eb; --danger: #ef4444; --success: #10b981; --warning: #f59e0b;
+            --font-main: 'Inter', 'Battambang', sans-serif;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Battambang', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        body { display: flex; height: 100vh; background-color: var(--bg-body); color: var(--text-dark); overflow: hidden; flex-direction: row; }
-
-        /* --- MOBILE HEADER (Visible on Mobile Only) --- */
-        .mobile-header {
-            display: none; /* Hidden on Desktop */
-            background: var(--sidebar-bg);
-            padding: 15px 20px;
-            align-items: center;
-            justify-content: space-between;
-            color: white;
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 2000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        body.dark-mode {
+            --bg-body: #0f172a; --sidebar-bg: #1e293b; --card-bg: #1e293b;
+            --text-main: #f8fafc; --text-sub: #94a3b8; --border: #334155;
         }
-        .mobile-brand { font-size: 18px; font-weight: 700; }
-        .menu-toggle { font-size: 24px; cursor: pointer; }
-
-        /* --- SIDEBAR --- */
-        .sidebar { 
-            width: 280px; 
-            background-color: var(--sidebar-bg); 
-            color: white; 
-            display: flex; 
-            flex-direction: column; 
-            padding: 25px 20px; 
-            flex-shrink: 0; 
-            height: 100vh;
-            transition: transform 0.3s ease;
-            z-index: 2001;
-        }
-        .brand { font-size: 18px; font-weight: 700; margin-bottom: 40px; display: flex; flex-direction: column; gap: 5px; }
-        .brand-main { color: white; letter-spacing: 0.5px; }
-        .brand-sub { font-size: 11px; color: #9ca3af; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); transition: background-color 0.2s, color 0.2s; }
         
-        .menu-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; color: #9ca3af; margin-bottom: 5px; display: flex; align-items: center; gap: 12px; font-size: 14px; transition: 0.2s; }
-        .menu-item:hover { background: rgba(255,255,255,0.1); color: white; }
-        .menu-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 600; border-left: 4px solid var(--primary); }
+        body { display: flex; height: 100vh; background-color: var(--bg-body); color: var(--text-main); overflow: hidden; }
 
-        /* OVERLAY (For Mobile Menu) */
-        .overlay {
-            display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 2000;
-        }
-
-        /* --- MAIN CONTENT --- */
-        .main { flex: 1; padding: 30px; overflow-y: auto; height: 100vh; position: relative; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .page-title { font-size: 20px; font-weight: 700; color: var(--text-dark); }
-
-        /* VIEWS */
-        .view-section { display: none; animation: fadeIn 0.3s ease; }
-        .view-section.active-view { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* STATS CARDS */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-        .card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
-        .card-label { font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase; margin-bottom: 5px; }
-        .card-value { font-size: 28px; font-weight: 700; }
-        .card-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; z-index: 100; border-right: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header { padding: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .app-logo { width: 50px; height: 50px; border-radius: 10px; margin-bottom: 10px; object-fit: contain; background: white; padding: 5px; }
         
-        .val-blue { color: var(--primary); } .bg-blue { background: #eff6ff; color: var(--primary); }
-        .val-green { color: #10b981; } .bg-green { background: #ecfdf5; color: #10b981; }
-        .val-red { color: #ef4444; } .bg-red { background: #fef2f2; color: #ef4444; }
+        .menu-item { padding: 12px 20px; margin: 0 10px 5px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; gap: 12px; align-items: center; font-size: 14px; transition: 0.2s; }
+        .menu-item:hover, .menu-item.active { background: var(--primary); color: white; }
 
-        /* FORMS & TABLES */
-        .white-box { background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 20px; }
-        .form-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-        .form-control { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; background: #f9fafb; outline: none; font-size: 14px; }
-        .form-control:focus { background: white; border-color: var(--primary); }
+        /* MAIN CONTENT */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; position: relative; }
+        .scroll-area { flex: 1; overflow-y: auto; padding: 30px; }
 
-        /* Responsive Table Wrapper */
-        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 15px; }
+        /* COMPONENTS */
+        .white-box { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
         
-        .item-table { width: 100%; border-collapse: collapse; min-width: 600px; /* Force scroll on small screens */ }
-        .item-table th { text-align: left; padding: 10px; background: #f9fafb; color: #6b7280; font-size: 12px; border-bottom: 1px solid var(--border); }
-        .item-table td { padding: 10px; border-bottom: 1px solid var(--border); }
+        .form-control { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-body); color: var(--text-main); outline: none; }
         
-        .btn-save { background: var(--primary); color: white; padding: 12px 30px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-        .btn-add { background: #eff6ff; color: var(--primary); border: none; padding: 8px 15px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .btn-send { background: #10b981; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; border:none; cursor:pointer; display:flex; align-items:center; gap:5px; white-space: nowrap; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { text-align: left; padding: 15px; background: var(--bg-body); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text-sub); }
+        td { padding: 15px; border-bottom: 1px solid var(--border); font-size: 14px; }
         
-        table.main-table { width: 100%; border-collapse: collapse; min-width: 800px; /* Force scroll */ }
-        table.main-table th { text-align: left; padding: 15px; background: #f9fafb; font-size: 12px; font-weight: 600; color: var(--text-light); text-transform: uppercase; border-bottom: 1px solid var(--border); }
-        table.main-table td { padding: 15px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-dark); }
-        .status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-        .st-paid { background: #dcfce7; color: #15803d; } .st-pending { background: #fee2e2; color: #991b1b; }
-        .action-btn { color: #ef4444; cursor: pointer; margin-left: 10px; }
-
-        /* --- RESPONSIVE CSS --- */
-        @media (max-width: 992px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .form-row { grid-template-columns: 1fr 1fr; }
-        }
-
-        @media (max-width: 768px) {
-            /* General Layout */
-            body { flex-direction: column; }
-            .mobile-header { display: flex; }
-            
-            /* Sidebar Drawer */
-            .sidebar { 
-                position: fixed; top: 0; left: -280px; height: 100%; 
-                box-shadow: 2px 0 10px rgba(0,0,0,0.1); 
-            }
-            .sidebar.active { left: 0; }
-            .overlay.active { display: block; }
-
-            /* Content Adjustment */
-            .main { padding: 15px; padding-top: 80px; /* Space for header */ }
-            
-            /* Stats Stack */
-            .stats-grid { grid-template-columns: 1fr; }
-            
-            /* Form Stack */
-            .form-row { grid-template-columns: 1fr; gap: 15px; }
-            .white-box { padding: 20px; }
-            
-            /* Footer Action Stack */
-            .footer-action { flex-direction: column; align-items: stretch !important; gap: 15px; }
-            .total-group { justify-content: space-between; width: 100%; }
-            .btn-save { width: 100%; }
-        }
-
-        /* INVOICE TEMPLATE (HIDDEN) */
-        #invoice-capture { position: fixed; top: -10000px; width: 800px; background: white; padding: 50px; font-family: 'Poppins', sans-serif; color: #111827; }
-        .inv-head { display: flex; justify-content: space-between; margin-bottom: 40px; }
-        .inv-logo h1 { font-size: 26px; font-weight: 800; margin: 0; color: #111827; }
-        .inv-logo p { font-size: 10px; letter-spacing: 2px; color: #6b7280; text-transform: uppercase; margin-top: 5px; }
-        .inv-meta div { text-align: right; margin-bottom: 5px; font-size: 14px; }
-        .inv-meta span { font-weight: 600; color: #9ca3af; font-size: 11px; text-transform: uppercase; margin-right: 15px; }
+        .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 13px; font-family: var(--font-main); }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-dark { background: #334155; color: white; }
         
-        .inv-table { width: 100%; margin-bottom: 30px; border-collapse: collapse; }
-        .inv-table th { background: #f3f4f6; padding: 10px; font-size: 11px; text-transform: uppercase; color: #6b7280; text-align: left; }
-        .inv-table td { padding: 15px 10px; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
-        .inv-summary { display: flex; justify-content: flex-end; }
-        .inv-total-row { display: flex; justify-content: space-between; width: 250px; margin-bottom: 5px; font-size: 14px; }
-        .inv-grand { font-size: 18px; font-weight: 800; margin-top: 10px; padding-top: 10px; border-top: 2px solid #e5e7eb; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; }
+        .bg-paid { background: #dcfce7; color: #166534; } 
+        .bg-pending { background: #f3f4f6; color: #4b5563; }
+        .bg-overdue { background: #fee2e2; color: #991b1b; } 
+        .bg-due { background: #fef3c7; color: #b45309; }
 
-        .inv-footer-area { margin-top: 40px; border-top: 1px solid #e5e7eb; padding-top: 20px; display: flex; justify-content: space-between; align-items: flex-start; }
-        .qr-section { display: flex; align-items: center; gap: 20px; }
-        .qr-img { width: 90px; height: 90px; border-radius: 8px; border: 1px solid #e5e7eb; object-fit: contain; }
-        .contact-section { text-align: right; }
-        .contact-row { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-bottom: 6px; font-size: 13px; color: #374151; }
-        .contact-icon { color: #2563eb; font-size: 14px; }
+        .alert-box { background: #fee2e2; border-left: 4px solid #ef4444; padding: 15px; margin-bottom: 20px; border-radius: 6px; display: none; }
+
+        /* LOGIN */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .inp-login { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; }
+        .btn-login { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { body { flex-direction: column; } .sidebar { display: none; } .stats-grid { grid-template-columns: 1fr; } }
+        
+        /* INVOICE HIDDEN */
+        #invoice-capture { position: fixed; left: -9999px; top: 0; width: 800px; background: white; padding: 50px; font-family: 'Inter', sans-serif; color: #111827; z-index: -1; }
     </style>
 </head>
 <body>
 
-    <div class="mobile-header">
-        <div class="mobile-brand">Reaksa Ads</div>
-        <div class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+    <div id="loginOverlay">
+        <div class="login-card">
+            <div style="margin-bottom: 20px;">
+                <img src="" id="loginLogoImg" style="width: 80px; margin-bottom: 10px; border-radius: 10px; display: none;">
+                <h2 style="color: var(--text-main); margin-top: 10px;">Reaksa Ads</h2>
+                <p style="color: var(--text-sub); font-size: 14px;">System V46 - Khmer & Logo</p>
+            </div>
+            <input type="text" id="loginEmail" class="inp-login" placeholder="Email (adsreaksa@gmail.com)">
+            <input type="password" id="loginPass" class="inp-login" placeholder="Password (adsreaksa050796)">
+            <button onclick="checkLogin()" class="btn-login">Login Account</button>
+        </div>
     </div>
 
-    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
-
-    <nav class="sidebar" id="sidebar">
-        <div class="brand">
-            <div class="brand-main"><i class="fab fa-slack"></i> Reaksa Ads</div>
-            <div class="brand-sub">intelligent solutions</div>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="" id="appLogoDisplay" class="app-logo" style="display:none;">
+            <div style="font-size: 18px; font-weight: 800;">AGENCY PRO</div>
+            <div style="font-size: 11px; opacity: 0.7;">INTELLIGENT SOLUTIONS</div>
         </div>
-        <div class="menu-item active" id="nav-dash" onclick="switchTab('dash'); toggleSidebar()"><i class="fas fa-th-large"></i> Dashboard</div>
-        <div class="menu-item" id="nav-inv" onclick="switchTab('inv'); toggleSidebar()"><i class="fas fa-file-invoice"></i> Invoices</div>
-        <div class="menu-item" id="nav-cli" onclick="switchTab('cli'); toggleSidebar()"><i class="fas fa-users"></i> Clients</div>
-        <div class="menu-item" id="nav-set" onclick="switchTab('set'); toggleSidebar()"><i class="fas fa-cog"></i> Settings</div>
-    </nav>
+        <div class="menu-item active" id="nav-dash" onclick="switchTab('dash')"><i class="fas fa-th-large"></i> <span class="lang-dash">Dashboard</span></div>
+        <div class="menu-item" id="nav-inv" onclick="switchTab('inv')"><i class="fas fa-file-invoice"></i> <span class="lang-inv">Invoices</span></div>
+        <div class="menu-item" id="nav-exp" onclick="switchTab('exp')"><i class="fas fa-chart-pie"></i> <span class="lang-exp">Expenses</span></div>
+        <div class="menu-item" id="nav-cli" onclick="switchTab('cli')"><i class="fas fa-users"></i> <span class="lang-cli">Clients</span></div>
+        <div class="menu-item" id="nav-set" onclick="switchTab('set')"><i class="fas fa-cog"></i> <span class="lang-set">Settings</span></div>
+    </aside>
 
-    <main class="main">
-        <div id="view-dash" class="view-section active-view">
-            <div class="header">
-                <div class="page-title">Dashboard</div>
-            </div>
-
-            <div class="stats-grid">
-                <div class="card"><div><div class="card-label">Total Revenue</div><div class="card-value val-blue" id="statRevenue">$0.00</div></div><div class="card-icon bg-blue"><i class="fas fa-wallet"></i></div></div>
-                <div class="card"><div><div class="card-label">Total Paid</div><div class="card-value val-green" id="statPaid">$0.00</div></div><div class="card-icon bg-green"><i class="fas fa-check-circle"></i></div></div>
-                <div class="card"><div><div class="card-label">Pending</div><div class="card-value val-red" id="statPending">$0.00</div></div><div class="card-icon bg-red"><i class="fas fa-exclamation-circle"></i></div></div>
-            </div>
-
-            <div class="white-box">
-                <h3 style="margin-bottom:20px;">New Invoice</h3>
-                <div class="form-row">
-                    <input type="text" id="inpClient" class="form-control" placeholder="Client Name" list="clientList">
-                    <datalist id="clientList"></datalist>
-                    <input type="text" id="inpInvNum" class="form-control" placeholder="Invoice #">
-                    <input type="date" id="inpDate" class="form-control">
+    <main class="main-content">
+        <div class="scroll-area">
+            
+            <div id="view-dash" class="view-section">
+                <div id="alertBox" class="alert-box">
+                    <h4 style="margin:0 0 5px 0; color:#991b1b;"><i class="fas fa-bell"></i> Alert</h4>
+                    <p style="margin:0; font-size:14px; color:#7f1d1d;" id="alertMsg"></p>
                 </div>
-                
-                <div class="table-responsive">
-                    <table class="item-table"><thead><tr><th style="width:50%;">Description</th><th style="width:15%;">Qty</th><th style="width:20%;">Price ($)</th><th style="width:10%;"></th></tr></thead><tbody id="itemContainer"></tbody></table>
+
+                <div class="stats-grid">
+                    <div class="stat-card"><div><small style="color:var(--text-sub)" class="lang-rev">REVENUE</small><h2 style="color:var(--primary)" id="stRev">$0.00</h2></div><i class="fas fa-wallet" style="font-size:24px; color:var(--primary)"></i></div>
+                    <div class="stat-card"><div><small style="color:var(--text-sub)" class="lang-exp-cost">EXPENSES</small><h2 style="color:var(--danger)" id="stExp">$0.00</h2></div><i class="fas fa-arrow-down" style="font-size:24px; color:var(--danger)"></i></div>
+                    <div class="stat-card"><div><small style="color:var(--text-sub)" class="lang-prof">PROFIT</small><h2 style="color:var(--success)" id="stProf">$0.00</h2></div><i class="fas fa-chart-line" style="font-size:24px; color:var(--success)"></i></div>
+                    <div class="stat-card"><div><small style="color:var(--text-sub)" class="lang-over">OVERDUE</small><h2 style="color:var(--danger)" id="stDue">0</h2></div><i class="fas fa-exclamation-circle" style="font-size:24px; color:var(--danger)"></i></div>
                 </div>
-                
-                <button onclick="addRow()" class="btn-add">+ Add Item</button>
-                
-                <div class="footer-action" style="margin-top:20px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:20px;">
-                    <div class="total-group" style="display:flex; gap:10px; align-items:center;">
-                        <select id="inpStatus" class="form-control" style="width:150px;"><option value="Pending">🔴 Pending</option><option value="Paid">🟢 Paid</option></select>
-                        <div style="font-size:18px; font-weight:700;">Total: <span id="displayTotal">$0.00</span></div>
+
+                <div class="white-box" style="height: 350px; position: relative;">
+                    <h3 style="margin-bottom: 20px;" class="lang-chart">Financial Overview</h3>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+
+                <div class="white-box">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                        <h3 id="formTitle" class="lang-new-inv">Create New Invoice</h3>
+                        <button onclick="resetForm()" class="btn" id="btnCancel" style="background:var(--text-main); color:white; display:none;">Cancel</button>
                     </div>
-                    <button onclick="saveInvoice()" class="btn-save" id="btnSave">Save Invoice</button>
-                </div>
-            </div>
-        </div>
+                    
+                    <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:15px; margin-bottom:15px;">
+                        <div>
+                            <label style="font-size:12px; font-weight:600;" class="lang-client">Client Name</label>
+                            <input type="text" id="inpClient" class="form-control" placeholder="Select Client" list="clientList">
+                            <datalist id="clientList"></datalist>
+                        </div>
+                        <div>
+                            <label style="font-size:12px; font-weight:600;">Invoice #</label>
+                            <input type="text" id="inpInvNum" class="form-control" placeholder="INV-001">
+                        </div>
+                        <div>
+                            <label style="font-size:12px; font-weight:600;" class="lang-date">Start Date</label>
+                            <input type="date" id="inpDate" class="form-control">
+                        </div>
+                    </div>
 
-        <div id="view-inv" class="view-section">
-            <div class="header"><div class="page-title">Invoices History</div></div>
-            <div class="white-box" style="padding:0; overflow:hidden;">
-                <div class="table-responsive">
-                    <table class="main-table"><thead><tr><th>Invoice</th><th>Client</th><th>Date</th><th>Total</th><th>Status</th><th>Action</th></tr></thead><tbody id="invoiceTable"></tbody></table>
-                </div>
-            </div>
-        </div>
+                    <div style="margin-bottom:20px;">
+                        <label style="font-size:12px; font-weight:600; color:var(--danger);" class="lang-due">Payment Due Date</label>
+                        <input type="date" id="inpDue" class="form-control" style="border-color:var(--danger);">
+                    </div>
 
-        <div id="view-cli" class="view-section">
-            <div class="header"><div class="page-title">Clients</div></div>
-            <div class="white-box">
-                <div class="form-row" style="margin-bottom:0;"><input type="text" id="cliName" class="form-control" placeholder="Name"><input type="text" id="cliPhone" class="form-control" placeholder="Phone"><button onclick="saveClient()" class="btn-save">Add</button></div>
-            </div>
-            <div class="white-box" style="padding:0; overflow:hidden;">
-                <div class="table-responsive">
-                    <table class="main-table"><thead><tr><th>Name</th><th>Phone</th><th>Action</th></tr></thead><tbody id="clientTable"></tbody></table>
-                </div>
-            </div>
-        </div>
+                    <div style="overflow-x:auto;">
+                        <table style="margin-bottom:15px;">
+                            <thead><tr><th class="lang-desc">Description</th><th style="width:100px;">Qty</th><th style="width:150px;">Price ($)</th><th style="width:50px;"></th></tr></thead>
+                            <tbody id="itemContainer"></tbody>
+                        </table>
+                    </div>
+                    <button onclick="addRow()" class="btn" style="background:#eff6ff; color:var(--primary);">+ Add Item</button>
 
-        <div id="view-set" class="view-section">
-            <div class="header"><div class="page-title">Settings</div></div>
-            <div class="white-box">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><b>Reset System</b><div style="font-size:12px; color:#6b7280;">Delete all data and start over.</div></div>
-                    <button onclick="if(confirm('Delete all data?')) { localStorage.clear(); location.reload(); }" style="background:#ef4444; color:white; padding:8px 15px; border:none; border-radius:6px; cursor:pointer;">Reset</button>
+                    <div style="margin-top:20px; padding-top:20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <select id="inpStatus" class="form-control" style="width:150px;"><option value="Pending">Pending</option><option value="Paid">Paid</option></select>
+                            <span style="font-size:18px; font-weight:700;">Total: <span id="displayTotal">$0.00</span></span>
+                        </div>
+                        <button onclick="saveInvoice()" class="btn btn-primary" id="btnSave">Save Invoice</button>
+                    </div>
                 </div>
             </div>
+
+            <div id="view-inv" class="view-section" style="display:none;">
+                <div class="white-box" style="padding:0; overflow:hidden;">
+                    <div style="padding:20px; border-bottom:1px solid var(--border);"><h3 class="lang-hist">Invoices History</h3></div>
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%;">
+                            <thead><tr><th>ID</th><th class="lang-client">Client</th><th class="lang-date">Date</th><th class="lang-due">Due Date</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="invoiceTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-exp" class="view-section" style="display:none;"><div class="white-box"><h3 class="lang-exp">Expenses</h3><div style="display:flex; gap:10px; margin:15px 0;"><input id="expDesc" class="form-control" placeholder="Description"><input type="number" id="expAmt" class="form-control" placeholder="Amount"><button onclick="saveExpense()" class="btn btn-danger">Add</button></div><table style="width:100%"><thead><tr><th>Desc</th><th>Date</th><th>Amount</th><th>Action</th></tr></thead><tbody id="expenseTable"></tbody></table></div></div>
+            <div id="view-cli" class="view-section" style="display:none;"><div class="white-box"><h3 class="lang-cli">Clients</h3><div style="display:flex; gap:10px; margin:15px 0;"><input id="cliName" class="form-control" placeholder="Name"><input id="cliPhone" class="form-control" placeholder="Phone"><button onclick="saveClient()" class="btn btn-primary">Add</button></div><table style="width:100%"><thead><tr><th>Name</th><th>Phone</th><th>Action</th></tr></thead><tbody id="clientTable"></tbody></table></div></div>
+            
+            <div id="view-set" class="view-section" style="display:none;">
+                <div class="white-box">
+                    <h3 class="lang-set">Settings</h3>
+                    <div style="margin-top:20px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:15px;">
+                            <div><b>System Language</b><br><small>ភាសា</small></div>
+                            <select id="langSelect" class="form-control" style="width:150px;" onchange="changeLang(this.value)">
+                                <option value="en">English</option>
+                                <option value="km">ភាសាខ្មែរ</option>
+                            </select>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:15px;">
+                            <div><b>Company Logo</b><br><small>Upload logo for invoice</small></div>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <input type="file" id="logoInput" style="display:none;" onchange="uploadLogo(this)">
+                                <button onclick="document.getElementById('logoInput').click()" class="btn btn-primary">Upload</button>
+                                <button onclick="removeLogo()" class="btn btn-danger">Remove</button>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:15px;">
+                            <div><b>Test Telegram Connection</b><br><small>Check Bot</small></div>
+                            <button onclick="testTelegram()" class="btn btn-success"><i class="fab fa-telegram"></i> Test</button>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>Exchange Rate</span><input id="setRate" class="form-control" style="width:100px;" value="4100" onchange="localStorage.setItem('agRate',this.value)"></div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:15px;"><span>Data Backup</span><button onclick="downloadData()" class="btn btn-dark">Download</button></div>
+                        <div style="display:flex; justify-content:space-between;"><span>Reset System</span><button onclick="if(confirm('Delete All?')){localStorage.clear();location.reload()}" class="btn btn-danger">Reset</button></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
     <div id="invoice-capture">
-        <div class="inv-head">
-            <div class="inv-logo"><h1>Reaksa Ads</h1><p>INTELLIGENT SOLUTIONS</p></div>
-            <div class="inv-meta">
-                <div><span>INVOICE NO</span> <b id="outNum"></b></div>
-                <div><span>DATE</span> <b id="outDate"></b></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:40px;">
+            <div>
+                <img src="" id="invLogo" style="height:60px; display:none; margin-bottom:10px;">
+                <h1 style="margin:0; font-size:26px;" id="invBrandName">Reaksa Ads</h1>
+                <p style="margin:5px 0; color:#6b7280; font-size:12px; letter-spacing:2px;">INTELLIGENT SOLUTIONS</p>
             </div>
+            <div style="text-align:right;"><h2 style="margin:0; color:#2563eb;">INVOICE</h2><div style="color:#6b7280;"># <span id="outNum"></span></div></div>
         </div>
-        <div style="border-bottom:2px solid #111827; margin-bottom:30px;"></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
-            <div><div style="font-size:10px; font-weight:700; color:#9ca3af;">BILL TO</div><div style="font-size:18px; font-weight:700;" id="outClient"></div></div>
-            <div style="text-align:right;"><div style="font-size:10px; font-weight:700; color:#9ca3af;">PAYMENT DUE</div><div style="font-size:16px; font-weight:700; color:#ef4444;" id="outDue"></div></div>
+        <div style="display:flex; justify-content:space-between; background:#f9fafb; padding:20px; border-radius:8px; margin-bottom:30px;">
+            <div><div style="font-size:11px; color:#6b7280; font-weight:700;">BILL TO</div><div style="font-size:16px; font-weight:700;" id="outClient"></div></div>
+            <div style="text-align:right;"><div style="font-size:11px; color:#6b7280; font-weight:700;">PAYMENT DUE</div><div style="font-size:16px; font-weight:700; color:#ef4444;" id="outDue"></div></div>
         </div>
-        <table class="inv-table"><thead><tr><th>Description</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Price</th><th style="text-align:right;">Total</th></tr></thead><tbody id="outItems"></tbody></table>
-        <div class="inv-summary"><div style="width:250px;">
-            <div class="inv-total-row"><span>Subtotal</span><span id="outSub">$0.00</span></div>
-            <div class="inv-total-row"><span>Tax (0%)</span><span>$0.00</span></div>
-            <div class="inv-total-row inv-grand"><span>TOTAL</span><span id="outTotal">$0.00</span></div>
-        </div></div>
-        
-        <div class="inv-footer-area">
-            <div class="qr-section">
-                <img src="https://i.postimg.cc/NM5461RZ/aba_qr.jpg" alt="ABA QR" class="qr-img" crossorigin="anonymous">
-                <div>
-                    <div style="font-size:10px; font-weight:700; color:#9ca3af; margin-bottom:5px;">PAYMENT INFO</div>
-                    <div style="font-weight:700; color:#111827;">ABA: 002 060 042</div>
-                    <div style="font-size:12px; color:#6b7280;">Reaksa Ads</div>
-                </div>
-            </div>
-            <div class="contact-section">
-                <div style="font-size:10px; font-weight:700; color:#9ca3af; margin-bottom:8px;">CONTACT US</div>
-                <div class="contact-row"><i class="fas fa-phone-alt contact-icon"></i> <b>015 812 050 | 068 566 402</b></div>
-                <div class="contact-row"><i class="fab fa-telegram-plane contact-icon"></i> <b style="color:#2563eb;">t.me/ReaksaAds</b></div>
-            </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:30px;">
+            <thead><tr style="border-bottom:2px solid #e5e7eb;"><th style="text-align:left; padding:10px 0;">DESCRIPTION</th><th style="text-align:center;">QTY</th><th style="text-align:right;">PRICE</th><th style="text-align:right;">TOTAL</th></tr></thead>
+            <tbody id="outItems"></tbody>
+        </table>
+        <div style="display:flex; justify-content:flex-end;"><div style="width:250px;"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>Total (USD)</span><span id="outTotal" style="font-weight:700;">$0.00</span></div><div style="display:flex; justify-content:space-between; color:#6b7280;"><span>Total (KHR)</span><span id="outKhr">0 ៛</span></div></div></div>
+        <div style="margin-top:50px; border-top:1px solid #e5e7eb; padding-top:20px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; gap:15px; align-items:center;"><img src="https://i.postimg.cc/NM5461RZ/aba_qr.jpg" style="width:80px;" crossorigin="anonymous"><div><div style="font-size:12px; font-weight:700;">ABA: 002 060 042</div><div style="font-size:12px;">Reaksa Ads</div></div></div>
+            <div style="text-align:right; font-size:12px; color:#6b7280;"><div>015 812 050 | 068 566 402</div><div>t.me/ReaksaAds</div></div>
         </div>
     </div>
 
     <script>
-        const BOT_TOKEN = "8269889459:AAFCHuvYXeEVzcK7bsWqxPvFgQp8yMwGVAQ"; 
-        const CHAT_ID = "6459933568"; 
-
-        let invoices = JSON.parse(localStorage.getItem('agDataV36')) || [];
-        let clients = JSON.parse(localStorage.getItem('agCliV36')) || [];
-
-        window.onload = function() {
-            document.getElementById('inpDate').value = new Date().toISOString().split('T')[0];
-            genInvNum();
-            renderTable();
-            renderClients();
-            renderAgency();
-            addRow();
+        const BOT_TOKEN = "8269889459:AAFCHuvYXeEVzcK7bsWqxPvFgQp8yMwGVAQ"; const CHAT_ID = "6459933568"; 
+        let invoices = JSON.parse(localStorage.getItem('agDataV46'))||[], clients = JSON.parse(localStorage.getItem('agCliV46'))||[], expenses = JSON.parse(localStorage.getItem('agExpV46'))||[];
+        let myChart = null, editingId = null;
+        
+        // TRANSLATIONS
+        const trans = {
+            en: {
+                dash: "Dashboard", inv: "Invoices", exp: "Expenses", cli: "Clients", set: "Settings",
+                rev: "REVENUE", exp_cost: "EXPENSES", prof: "PROFIT", over: "OVERDUE",
+                chart: "Financial Overview", new_inv: "Create New Invoice", client: "Client Name",
+                date: "Issue Date", due: "Payment Due Date", desc: "Description", hist: "Invoice History"
+            },
+            km: {
+                dash: "ផ្ទាំងគ្រប់គ្រង", inv: "វិក្កយបត្រ", exp: "ចំណាយ", cli: "អតិថិជន", set: "ការកំណត់",
+                rev: "ចំណូលសរុប", exp_cost: "ចំណាយសរុប", prof: "ប្រាក់ចំណេញ", over: "ហួសកំណត់",
+                chart: "របាយការណ៍ហិរញ្ញវត្ថុ", new_inv: "បង្កើតវិក្កយបត្រថ្មី", client: "ឈ្មោះអតិថិជន",
+                date: "ថ្ងៃចេញវិក្កយបត្រ", due: "ថ្ងៃត្រូវបង់លុយ", desc: "បរិយាយ", hist: "ប្រវត្តិវិក្កយបត្រ"
+            }
         };
 
-        // --- RESPONSIVE MENU ---
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active'); // Toggle Overlay
+        function checkLogin() {
+            if(document.getElementById('loginEmail').value==="adsreaksa@gmail.com" && document.getElementById('loginPass').value==="adsreaksa050796") {
+                document.getElementById('loginOverlay').style.display='none'; initApp();
+            } else alert("Invalid Login");
         }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
-            document.getElementById('nav-'+tabId).classList.add('active');
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
-            document.getElementById('view-'+tabId).classList.add('active-view');
-        }
-
-        function addRow() {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td><input type="text" class="form-control i-desc" placeholder="Service Name"></td><td><input type="number" class="form-control i-qty" value="1" oninput="calcTotal()"></td><td><input type="number" class="form-control i-price" placeholder="0.00" oninput="calcTotal()"></td><td style="text-align:center;"><i class="fas fa-trash action-btn" onclick="this.closest('tr').remove(); calcTotal();"></i></td>`;
-            document.getElementById('itemContainer').appendChild(tr);
-        }
-
-        function calcTotal() {
-            let total = 0;
-            document.querySelectorAll('#itemContainer tr').forEach(row => {
-                const qty = parseFloat(row.querySelector('.i-qty').value) || 0;
-                const price = parseFloat(row.querySelector('.i-price').value) || 0;
-                total += qty * price;
-            });
-            document.getElementById('displayTotal').innerText = "$" + total.toFixed(2);
-            return total;
-        }
-
-        function genInvNum() { 
-            const inp = document.getElementById('inpInvNum');
-            if(!inp.value) inp.value = "INV-" + (invoices.length + 1).toString().padStart(3, '0'); 
-        }
-
-        function saveInvoice() {
-            const client = document.getElementById('inpClient').value;
-            if(!client) return alert("Please enter Client Name");
-            const items = [];
-            document.querySelectorAll('#itemContainer tr').forEach(row => {
-                const desc = row.querySelector('.i-desc').value;
-                const qty = parseFloat(row.querySelector('.i-qty').value) || 0;
-                const price = parseFloat(row.querySelector('.i-price').value) || 0;
-                if(desc) items.push({desc, qty, price, total: qty*price});
-            });
-            if(items.length===0) return alert("Add items");
-
-            const total = calcTotal();
-            const invNum = document.getElementById('inpInvNum').value;
-            const inv = { 
-                id: Date.now(), 
-                num: invNum, 
-                client, items, total, 
-                status: document.getElementById('inpStatus').value, 
-                date: document.getElementById('inpDate').value 
-            };
+        function initApp() {
+            document.getElementById('inpDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('setRate').value = localStorage.getItem('agRate')||4100;
             
-            invoices.unshift(inv);
-            localStorage.setItem('agDataV36', JSON.stringify(invoices));
-            
-            alert("✅ Saved! Go to 'Invoices' to send.");
-            renderAgency();
-            renderTable();
-            
-            document.getElementById('inpClient').value = "";
-            document.getElementById('itemContainer').innerHTML = "";
-            document.getElementById('inpInvNum').value = "";
-            addRow();
-            genInvNum();
-            calcTotal();
+            // Load Settings
+            const savedLang = localStorage.getItem('agLang') || 'en';
+            document.getElementById('langSelect').value = savedLang;
+            changeLang(savedLang);
+            loadLogo();
+
+            updateStats(); renderTable(); renderClients(); renderExpenses(); addRow(); genInvNum(); renderChart(); checkAlerts();
         }
 
-        function renderAgency() {
-            let rev=0, paid=0, pend=0;
-            invoices.forEach(i => {
-                rev += i.total;
-                if(i.status==='Paid') paid+=i.total; else pend+=i.total;
-            });
-            document.getElementById('statRevenue').innerText = "$"+rev.toFixed(2);
-            document.getElementById('statPaid').innerText = "$"+paid.toFixed(2);
-            document.getElementById('statPending').innerText = "$"+pend.toFixed(2);
+        // --- LANGUAGE & LOGO ---
+        function changeLang(lang) {
+            localStorage.setItem('agLang', lang);
+            document.querySelector('.lang-dash').innerText = trans[lang].dash;
+            document.querySelector('.lang-inv').innerText = trans[lang].inv;
+            document.querySelector('.lang-exp').innerText = trans[lang].exp;
+            document.querySelector('.lang-cli').innerText = trans[lang].cli;
+            document.querySelector('.lang-set').innerText = trans[lang].set;
+            document.querySelector('.lang-rev').innerText = trans[lang].rev;
+            document.querySelector('.lang-exp-cost').innerText = trans[lang].exp_cost;
+            document.querySelector('.lang-prof').innerText = trans[lang].prof;
+            document.querySelector('.lang-over').innerText = trans[lang].over;
+            document.querySelector('.lang-chart').innerText = trans[lang].chart;
+            document.querySelector('.lang-new-inv').innerText = trans[lang].new_inv;
+            document.querySelector('.lang-client').innerText = trans[lang].client;
+            document.querySelector('.lang-date').innerText = trans[lang].date;
+            document.querySelector('.lang-due').innerText = trans[lang].due;
+            document.querySelector('.lang-desc').innerText = trans[lang].desc;
+            document.querySelector('.lang-hist').innerText = trans[lang].hist;
         }
 
-        function renderTable() {
-            const tb = document.getElementById('invoiceTable'); tb.innerHTML = "";
-            invoices.forEach(i => {
-                let badge = i.status==='Paid' ? 'st-paid' : 'st-pending';
-                tb.innerHTML += `
-                    <tr>
-                        <td style="color:var(--primary); font-weight:700;">${i.num}</td>
-                        <td>${i.client}</td>
-                        <td>${i.date}</td>
-                        <td style="font-weight:700;">$${i.total.toFixed(2)}</td>
-                        <td><span class="status-badge ${badge}">${i.status}</span></td>
-                        <td style="display:flex; align-items:center;">
-                            <button class="btn-send" onclick='prepSend(${JSON.stringify(i)})'><i class="fab fa-telegram-plane"></i> Send</button>
-                            <i class="fas fa-trash action-btn" onclick="delInv(${i.id})"></i>
-                        </td>
-                    </tr>`;
-            });
+        function uploadLogo(input) {
+            const file = input.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('agLogo', e.target.result);
+                    loadLogo();
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
-        function delInv(id) { if(confirm("Delete?")) { invoices = invoices.filter(i=>i.id!=id); localStorage.setItem('agDataV36', JSON.stringify(invoices)); renderTable(); renderAgency(); } }
+        function removeLogo() { localStorage.removeItem('agLogo'); loadLogo(); }
 
-        function saveClient() {
-            const name = document.getElementById('cliName').value;
-            if(!name) return;
-            clients.unshift({id:Date.now(), name, phone:document.getElementById('cliPhone').value});
-            localStorage.setItem('agCliV36', JSON.stringify(clients));
-            renderClients();
-            document.getElementById('cliName').value="";
+        function loadLogo() {
+            const logo = localStorage.getItem('agLogo');
+            const display = document.getElementById('appLogoDisplay');
+            const invImg = document.getElementById('invLogo');
+            const invTxt = document.getElementById('invBrandName');
+            const loginLogo = document.getElementById('loginLogoImg');
+
+            if(logo) {
+                display.src = logo; display.style.display = 'block';
+                invImg.src = logo; invImg.style.display = 'block';
+                loginLogo.src = logo; loginLogo.style.display = 'block';
+                invTxt.style.display = 'none'; // Hide text if logo exists
+            } else {
+                display.style.display = 'none';
+                invImg.style.display = 'none';
+                loginLogo.style.display = 'none';
+                invTxt.style.display = 'block';
+            }
         }
-        function renderClients() {
-            const tb = document.getElementById('clientTable'); const dl = document.getElementById('clientList');
-            tb.innerHTML = ""; dl.innerHTML = "";
-            clients.forEach(c => {
-                dl.innerHTML += `<option value="${c.name}">`;
-                tb.innerHTML += `<tr><td><b>${c.name}</b></td><td>${c.phone}</td><td><i class="fas fa-trash action-btn" onclick="delCli(${c.id})"></i></td></tr>`;
-            });
+
+        // --- TEST CONNECTION ---
+        function testTelegram() {
+            const btn = event.target; const originalText = btn.innerHTML; btn.innerHTML = "Sending...";
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ chat_id: CHAT_ID, text: "✅ System Connected Successfully!" })
+            }).then(res => res.json()).then(data => {
+                if(data.ok) alert("✅ Success!"); else alert("❌ Error: " + data.description);
+            }).catch(err => alert("❌ Network Error")).finally(() => btn.innerHTML = originalText);
         }
-        function delCli(id) { clients=clients.filter(c=>c.id!=id); localStorage.setItem('agCliV36', JSON.stringify(clients)); renderClients(); }
 
-        function prepSend(data) { sendTelegram(data); }
-
+        // --- CORE FUNCTIONS (Same as V45) ---
         function sendTelegram(data) {
-            document.getElementById('outNum').innerText = data.num;
-            document.getElementById('outDate').innerText = data.date;
-            document.getElementById('outClient').innerText = data.client;
-            document.getElementById('outDue').innerText = data.date;
-            const tbody = document.getElementById('outItems');
-            tbody.innerHTML = "";
-            data.items.forEach(it => {
-                tbody.innerHTML += `<tr><td><b>${it.desc}</b><br><small style="color:#9ca3af">Service Fee</small></td><td style="text-align:center">${it.qty}</td><td style="text-align:right">$${it.price.toFixed(2)}</td><td style="text-align:right; font-weight:700;">$${it.total.toFixed(2)}</td></tr>`;
-            });
-            document.getElementById('outSub').innerText = "$"+data.total.toFixed(2);
-            document.getElementById('outTotal').innerText = "$"+data.total.toFixed(2);
-
-            const notif = document.createElement('div');
-            notif.style.cssText = "position:fixed; bottom:20px; right:20px; background:#10b981; color:white; padding:15px; border-radius:8px; z-index:9999;";
-            notif.innerText = "Sending to Telegram...";
-            document.body.appendChild(notif);
-
-            html2canvas(document.getElementById("invoice-capture"), {scale:2, useCORS:true}).then(c => {
-                c.toBlob(b => {
-                    const f = new FormData(); f.append('chat_id', CHAT_ID); f.append('photo', b);
-                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {method:'POST', body:f})
-                    .then(() => { 
-                        notif.innerText = "✅ Sent Successfully!"; 
-                        setTimeout(() => notif.remove(), 3000);
+            fillTemplate(data); const btn = event.target.closest('button'); const originalIcon = btn.innerHTML; btn.innerText = "...";
+            setTimeout(() => {
+                html2canvas(document.getElementById("invoice-capture"), { scale: 2, useCORS: true }).then(canvas => {
+                    canvas.toBlob(blob => {
+                        const formData = new FormData(); formData.append('chat_id', CHAT_ID); formData.append('photo', blob);
+                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData })
+                        .then(res => res.json()).then(d => { if(d.ok) { btn.innerHTML='✅'; setTimeout(()=>btn.innerHTML=originalIcon,2000); } else alert("Error: "+d.description); });
                     });
                 });
-            });
+            }, 500);
         }
+
+        function checkAlerts() {
+            const today = new Date().toISOString().split('T')[0]; let dueCount = 0;
+            invoices.forEach(i => { if(i.status !== 'Paid' && i.dueDate && i.dueDate <= today) dueCount++; });
+            if(dueCount > 0) { document.getElementById('alertBox').style.display = 'block'; document.getElementById('alertMsg').innerText = `You have ${dueCount} overdue invoices!`; document.getElementById('stDue').innerText = dueCount; }
+            else { document.getElementById('alertBox').style.display = 'none'; document.getElementById('stDue').innerText = "0"; }
+        }
+
+        function switchTab(id){ document.querySelectorAll('.menu-item').forEach(e=>e.classList.remove('active')); document.getElementById('nav-'+id).classList.add('active'); document.querySelectorAll('.view-section').forEach(e=>e.style.display='none'); document.getElementById('view-'+id).style.display='block'; if(id==='dash') renderChart(); }
+        function addRow(d='',q=1,p=''){ const tr=document.createElement('tr'); tr.innerHTML=`<td><input class="form-control i-desc" value="${d}"></td><td><input type="number" class="form-control i-qty" value="${q}" oninput="calc()"></td><td><input type="number" class="form-control i-price" value="${p}" oninput="calc()"></td><td><i class="fas fa-times" style="color:var(--danger);cursor:pointer;" onclick="this.closest('tr').remove();calc()"></i></td>`; document.getElementById('itemContainer').appendChild(tr); }
+        function calc(){ let t=0; document.querySelectorAll('#itemContainer tr').forEach(r=>{ t+=(r.querySelector('.i-qty').value||0)*(r.querySelector('.i-price').value||0); }); document.getElementById('displayTotal').innerText="$"+t.toFixed(2); return t; }
+        function genInvNum(){ if(!editingId) document.getElementById('inpInvNum').value="INV-"+(invoices.length+1).toString().padStart(3,'0'); }
+
+        function saveInvoice(){
+            const c=document.getElementById('inpClient').value; if(!c) return alert("Client Name?");
+            const items=[]; document.querySelectorAll('#itemContainer tr').forEach(r=>{ if(r.querySelector('.i-desc').value) items.push({desc:r.querySelector('.i-desc').value, qty:r.querySelector('.i-qty').value, price:r.querySelector('.i-price').value}); });
+            if(items.length==0) return alert("Items?");
+            const inv={ id:editingId||Date.now(), num:document.getElementById('inpInvNum').value, client:c, items, total:calc(), status:document.getElementById('inpStatus').value, date:document.getElementById('inpDate').value, dueDate:document.getElementById('inpDue').value };
+            if(editingId){ invoices[invoices.findIndex(i=>i.id===editingId)]=inv; alert("Updated!"); } else { invoices.unshift(inv); alert("Saved!"); }
+            localStorage.setItem('agDataV46',JSON.stringify(invoices)); resetForm(); updateStats(); renderTable(); renderChart(); checkAlerts();
+        }
+
+        function resetForm(){ editingId=null; document.getElementById('inpClient').value=""; document.getElementById('inpDue').value=""; document.getElementById('itemContainer').innerHTML=""; document.getElementById('formTitle').innerText="Create New Invoice"; document.getElementById('btnSave').innerText="Save Invoice"; document.getElementById('btnCancel').style.display='none'; addRow(); genInvNum(); calc(); }
+        
+        function editInv(dStr){ 
+            const d=JSON.parse(decodeURIComponent(dStr)); editingId=d.id; 
+            document.getElementById('inpClient').value=d.client; document.getElementById('inpInvNum').value=d.num; 
+            document.getElementById('inpDate').value=d.date; document.getElementById('inpStatus').value=d.status; document.getElementById('inpDue').value=d.dueDate || "";
+            document.getElementById('itemContainer').innerHTML=""; d.items.forEach(i=>addRow(i.desc,i.qty,i.price)); calc(); 
+            document.getElementById('formTitle').innerText="Edit Invoice"; document.getElementById('btnSave').innerText="Update"; document.getElementById('btnCancel').style.display='inline-flex'; switchTab('dash'); 
+        }
+
+        function renderTable(){ 
+            const tb=document.getElementById('invoiceTable'); tb.innerHTML=""; const today = new Date().toISOString().split('T')[0];
+            invoices.forEach(i=>{ 
+                let badge='bg-pending', txt=i.status;
+                if(i.status==='Paid') badge='bg-paid';
+                else if(i.dueDate && i.dueDate < today) { badge='bg-overdue'; txt='Overdue'; }
+                else if(i.dueDate && i.dueDate === today) { badge='bg-due'; txt='Due Today'; }
+                const ds=encodeURIComponent(JSON.stringify(i)); 
+                tb.innerHTML+=`<tr><td>${i.num}</td><td>${i.client}</td><td>${i.date}</td><td style="color:${badge==='bg-overdue'?'red':'inherit'}">${i.dueDate||'-'}</td><td>$${i.total.toFixed(2)}</td><td><span class="badge ${badge}">${txt}</span></td><td style="display:flex; gap:8px;"><button class="btn" style="background:#eff6ff;color:blue" onclick="editInv('${ds}')"><i class="fas fa-edit"></i></button><button class="btn" style="background:#ecfdf5;color:green" onclick='sendTelegram(${JSON.stringify(i)})'><i class="fab fa-telegram"></i></button><button class="btn" style="background:#fee2e2;color:red" onclick="delInv(${i.id})"><i class="fas fa-trash"></i></button></td></tr>`; 
+            }); 
+        }
+        function delInv(id){ if(confirm("Delete?")){ invoices=invoices.filter(i=>i.id!=id); localStorage.setItem('agDataV46',JSON.stringify(invoices)); renderTable(); updateStats(); checkAlerts(); } }
+
+        function updateStats(){ let r=0,e=0,p=0; invoices.forEach(i=>{ r+=i.total; if(i.status=='Pending') p+=i.total; }); expenses.forEach(x=>e+=x.amt); document.getElementById('stRev').innerText="$"+r.toFixed(2); document.getElementById('stExp').innerText="$"+e.toFixed(2); document.getElementById('stProf').innerText="$"+(r-e).toFixed(2); }
+        function renderChart(){ const ctx=document.getElementById('revenueChart').getContext('2d'); if(myChart)myChart.destroy(); const l=[],r=[],e=[]; for(let i=5;i>=0;i--){ const d=new Date(); d.setMonth(d.getMonth()-i); const k=d.toISOString().slice(0,7); l.push(d.toLocaleString('default',{month:'short'})); r.push(invoices.filter(x=>x.date.startsWith(k)).reduce((a,b)=>a+b.total,0)); e.push(expenses.filter(x=>x.date.startsWith(k)).reduce((a,b)=>a+b.amt,0)); } myChart=new Chart(ctx,{ type:'bar', data:{labels:l,datasets:[{label:'Revenue',data:r,backgroundColor:'#2563eb',borderRadius:4},{label:'Expenses',data:e,backgroundColor:'#ef4444',borderRadius:4}]}, options:{responsive:true,maintainAspectRatio:false} }); }
+
+        function saveClient(){ const n=document.getElementById('cliName').value; if(!n)return; clients.push({name:n, phone:document.getElementById('cliPhone').value}); localStorage.setItem('agCliV46',JSON.stringify(clients)); renderClients(); }
+        function renderClients(){ const t=document.getElementById('clientTable'); t.innerHTML=""; clients.forEach((c,i)=>{ t.innerHTML+=`<tr><td>${c.name}</td><td>${c.phone}</td><td><i class="fas fa-trash" style="color:red;cursor:pointer;" onclick="delCli(${i})"></i></td></tr>`; }); }
+        function delCli(i){ clients.splice(i,1); localStorage.setItem('agCliV46',JSON.stringify(clients)); renderClients(); }
+        
+        function saveExpense(){ const d=document.getElementById('expDesc').value, a=parseFloat(document.getElementById('expAmt').value); if(!d||!a)return; expenses.unshift({id:Date.now(), desc:d, amt:a, date:new Date().toISOString().split('T')[0]}); localStorage.setItem('agExpV46',JSON.stringify(expenses)); document.getElementById('expDesc').value=""; document.getElementById('expAmt').value=""; renderExpenses(); updateStats(); renderChart(); }
+        function renderExpenses(){ const tb=document.getElementById('expenseTable'); tb.innerHTML=""; expenses.forEach(e=>tb.innerHTML+=`<tr><td>${e.desc}</td><td>${e.date}</td><td>$${e.amt.toFixed(2)}</td><td><i class="fas fa-trash" style="color:var(--danger);cursor:pointer;" onclick="delExp(${e.id})"></i></td></tr>`); }
+        function delExp(id){ expenses=expenses.filter(e=>e.id!=id); localStorage.setItem('agExpV46',JSON.stringify(expenses)); renderExpenses(); updateStats(); renderChart(); }
+
+        function fillTemplate(d){ document.getElementById('outNum').innerText=d.num; document.getElementById('outDate').innerText=d.date; document.getElementById('outClient').innerText=d.client; document.getElementById('outDue').innerText=d.dueDate || d.date; document.getElementById('outItems').innerHTML=d.items.map(i=>`<tr><td style="padding:10px 0; border-bottom:1px solid #eee;">${i.desc}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:right;">$${i.price}</td><td style="text-align:right; font-weight:700;">$${(i.qty*i.price).toFixed(2)}</td></tr>`).join(''); document.getElementById('outTotal').innerText="$"+d.total.toFixed(2); document.getElementById('outKhr').innerText=(d.total*(localStorage.getItem('agRate')||4100)).toLocaleString()+" ៛"; }
+        
+        function downloadData(){ const a=document.createElement("a"); a.href="data:text/json;charset=utf-8,"+encodeURIComponent(JSON.stringify({inv:invoices,cli:clients,exp:expenses})); a.download="Backup.json"; a.click(); }
+        function restoreData(i){ const r=new FileReader(); r.onload=e=>{ const d=JSON.parse(e.target.result); if(d.inv){ localStorage.setItem('agDataV46',JSON.stringify(d.inv)); localStorage.setItem('agCliV46',JSON.stringify(d.cli)); localStorage.setItem('agExpV46',JSON.stringify(d.exp)); location.reload(); } }; r.readAsText(i.files[0]); }
     </script>
 </body>
 </html>
